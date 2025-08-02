@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-
 
 import Header from './Header';
 import Footer from './Footer';
@@ -11,12 +10,23 @@ import Registration from './Registration';
 import Mission from './Mission';
 import Contact from './Contact';
 
+import Dashboard from './Dashboard'; 
+import PrivateRoute from './PrivateRoute'; 
+import UnderConstruction from './UnderConstruction';
+
+import Smoke from './Smoke';
+import BottomSmoke from './BottomSmoke'; // Import BottomSmoke
+
 function Home() {
   return (
     <>
+      {/* Ensure BottomSmoke is rendered first to stay behind everything */}
+      <BottomSmoke />  
+
+      {/* Main Content */}
       <Header />
-      
-      <main className="flex flex-col items-center justify-center text-center py-20 px-4 sm:px-8 bg-[#1f1f1f] text-[#e3e4d9]">
+
+      <main className="flex flex-col items-center justify-center text-center pt-20 px-4 sm:px-8 bg-[#1f1f1f] text-[#e3e4d9]">
         <div className="max-w-3xl">
           <h2 className="text-3xl sm:text-5xl font-bold mb-6 leading-tight text-[#b7c8b5]">
             Let's Just <span className="text-[#88a07d]">Moss</span>
@@ -28,9 +38,8 @@ function Home() {
             Our app is growing organically. Stay tuned.
           </p>
         </div>
-
-        
       </main>
+
       <Footer />
     </>
   );
@@ -46,6 +55,10 @@ function App() {
           <Route path="/register" element={<Registration />} />
           <Route path="/mission" element={<Mission />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
+          <Route path="/manage-users" element={<PrivateRoute element={<UnderConstruction />} />} />
+          <Route path="/site-settings" element={<PrivateRoute element={<UnderConstruction />} />} />
+          <Route path="/view-reports" element={<PrivateRoute element={<UnderConstruction />} />} />
         </Routes>
       </div>
     </Router>

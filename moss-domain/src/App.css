@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+/* In your App.css or custom styles */
+header, footer {
+  position: relative;
+  z-index: 10; /* Ensure header/footer are on top */
+}
+
+main {
+  position: relative;
+  z-index: 5; /* Ensure main content is above the smoke */
+}

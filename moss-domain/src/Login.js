@@ -10,31 +10,28 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setErrorMsg('');
+  e.preventDefault();
+  setErrorMsg('');
 
-    try {
-      // Sending the login request to the backend
-      const res = await fetch('https://flumpy.ca/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: email, password })
-      });
+  try {
+    const res = await fetch('https://flumpy.ca/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: email, password })
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (res.ok && data.token) {
-        // Store JWT token in localStorage
-        localStorage.setItem('token', data.token);
-        // Redirect to dashboard (or wherever needed)
-        navigate('/dashboard');
-      } else {
-        setErrorMsg(data.error || 'Login failed');
-      }
-    } catch (err) {
-      setErrorMsg('Server error. Please try again later.');
+    if (res.ok && data.token) {
+      localStorage.setItem('token', data.token); // Save the token to localStorage
+      navigate('/dashboard'); // Redirect to dashboard
+    } else {
+      setErrorMsg(data.error || 'Login failed');
     }
-  };
+    } catch (err) {
+        setErrorMsg('Server error. Please try again later.');
+    }
+    };
 
   return (
     <>
