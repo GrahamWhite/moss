@@ -1,0 +1,28 @@
+{
+  "name": "moss-backend",
+  "version": "1.0.0",
+  "description": "Moss Domain Backend",
+  "homepage": "https://github.com/GrahamWhite/moss#readme",
+  "bugs": {
+    "url": "https://github.com/GrahamWhite/moss/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GrahamWhite/moss.git"
+  },
+  "license": "ISC",
+  "author": "Graham White",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

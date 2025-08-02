@@ -7,6 +7,7 @@ import Header from './Header';
 import Footer from './Footer';
 
 import Login from './Login';
+import Registration from './Registration';
 import Mission from './Mission';
 import Contact from './Contact';
 
@@ -42,6 +43,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Registration />} />
           <Route path="/mission" element={<Mission />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
