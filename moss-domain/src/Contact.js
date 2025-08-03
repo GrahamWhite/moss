@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
-
+import BottomSmoke from './BottomSmoke';
 function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
@@ -18,10 +18,11 @@ function Contact() {
 
   return (
     <>
+      <BottomSmoke />
       <Header />
       
       <div className="relative z-10">
-        <main className="min-h-screen bg-[#1f1f1f] backdrop-blur-sm text-[#e3e4d9] font-sans antialiased px-6 py-12">
+        <main className="min-h-screen bg-[#1f1f1f] backdrop-blur-sm text-[#e3e4d9] font-sans antialiased px-6 pt-20">
           <div className="max-w-2xl mx-auto bg-[#2d2d2d] backdrop-blur-sm rounded-lg p-8 shadow-lg">
             <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-[#b7c8b5]">
               Reach Out to Us at <span className="text-[#88a07d]">Moss</span>

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-
+import BottomSmoke from './BottomSmoke';
 function Registration() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,8 +43,9 @@ function Registration() {
 
   return (
     <>
+    <BottomSmoke />
       <Header />
-      <main className="flex flex-col items-center justify-center py-20 px-4 sm:px-8 bg-[#1f1f1f] text-[#e3e4d9] min-h-screen">
+      <main className="flex flex-col items-center justify-center pt-20 px-4 sm:px-8 bg-[#1f1f1f] text-[#e3e4d9]">
         <div className="w-full max-w-md bg-[#2a2a2a] rounded-2xl shadow-lg p-8 border border-[#3a3a3a]">
           <h2 className="text-3xl font-bold text-center mb-6 text-[#b7c8b5]">
             Create an Account

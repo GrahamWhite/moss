@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-
+import BottomSmoke from './BottomSmoke';
 function Mission() {
   return (
     <>
+      <BottomSmoke />
       <Header />
-      <main className="flex flex-col items-center justify-center text-center py-20 px-4 sm:px-8 bg-[#1f1f1f] text-[#e3e4d9]">
+      <main className="flex flex-col items-center justify-center text-center pt-20 px-4 sm:px-8 bg-[#1f1f1f] text-[#e3e4d9]">
         <div className="max-w-3xl">
           <h2 className="text-3xl sm:text-5xl font-bold mb-6 leading-tight text-[#b7c8b5]">
             Our Mission at <span className="text-[#88a07d]">Moss</span>

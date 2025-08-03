@@ -5,14 +5,22 @@ class SmokeParticle {
   constructor(p, x, y) {
     this.x = x;
     this.y = y;
-    this.size = p.random(10, 40);
+    this.size = p.random(5, 10);        // Start small
+    this.initialSize = this.size;
+    this.maxSize = p.random(30, 60);    // Max size while fading
     this.opacity = 255;
-    this.speed = p.random(0.1, 1.5);
+    this.speed = p.random(0.3, 1.2);
+    this.growthRate = p.random(0.2, 0.5); // Size increase per frame
   }
 
   update() {
     this.y -= this.speed;
     this.opacity -= 2;
+
+    // Gradually grow in size but don’t exceed max
+    if (this.size < this.maxSize) {
+      this.size += this.growthRate;
+    }
   }
 
   display(p) {
@@ -25,6 +33,7 @@ class SmokeParticle {
     return this.opacity > 0;
   }
 }
+
 
 const BottomSmoke = () => {
   useEffect(() => {
@@ -54,7 +63,7 @@ const BottomSmoke = () => {
       };
 
       p.windowResized = () => {
-        p.resizeCanvas(p.windowWidth, 300); // Keep canvas size fixed at the bottom
+        p.resizeCanvas(p.windowWidth, p.windowHeight / 4); // Keep canvas size fixed at the bottom
       };
     };
 

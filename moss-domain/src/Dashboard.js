@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-
+import BottomSmoke from './BottomSmoke';
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -22,8 +22,9 @@ function Dashboard() {
 
   return (
     <>
+      <BottomSmoke />
       <Header />
-      <main className="flex flex-col items-center justify-center py-20 px-4 sm:px-8 bg-[#1f1f1f] text-[#e3e4d9] min-h-screen">
+      <main className="flex flex-col items-center justify-center pt-20 px-4 sm:px-8 bg-[#1f1f1f] text-[#e3e4d9]">
         <div className="w-full max-w-4xl bg-[#2a2a2a] rounded-2xl shadow-lg p-8 border border-[#3a3a3a]">
           {errorMsg && (
             <div className="text-red-400 text-sm text-center mb-4">
