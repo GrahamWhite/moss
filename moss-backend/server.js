@@ -90,7 +90,7 @@ app.post('/api/auth/login', async (req, res) => {
     return res.status(400).json({ error: 'Email and password required' });
 
   try {
-    const [rows] = await pool.execute('SELECT id, password_hash FROM users WHERE email = ?', [username]);
+    const [rows] = await pool.execute('SELECT email, password_hash FROM users WHERE email = ?', [username]);
     if (rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
