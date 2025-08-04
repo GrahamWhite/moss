@@ -50,7 +50,7 @@ function Home() {
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-[#1f1f1f] text-[#e3e4d9] font-sans antialiased">
+      <div className="bg-[#1f1f1f] text-[#e3e4d9] font-sans antialiased">
         <Routes>
           <Route path="/" element={<Home />} />
 

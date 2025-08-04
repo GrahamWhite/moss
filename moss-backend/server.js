@@ -1,86 +1,117 @@
-// server.js
-
 require('dotenv').config();
 const express = require('express');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const mysql = require('mysql2/promise');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// For demo: a simple user store (in-memory)
-const users = new Map(); // username -> hashedPassword
+// Create MySQL connection pool
+const dbConfig = {
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'moss',
+  password: process.env.DB_PASSWORD || 'Snoops123*!',
+  database: process.env.DB_NAME || 'moss_users',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+};
 
+console.log('DB Config:', {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
+
+let pool;
+async function initDB() {
+  pool = await mysql.createPool(dbConfig);
+}
+initDB();
+
+// CORS setup
 const allowedOrigins = [
   'https://flumpy.ca',
   'https://www.flumpy.ca',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://192.168.68.55:3000'
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // allow server-to-server or postman calls
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true // if you need cookies/auth headers
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
 }));
 
 app.use(express.json());
 
-// Register endpoint (creates user with hashed password)
+// REGISTER endpoint
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
-  if (!username || !password) {
-    console.log("Registering User");
-    return res.status(400).json({ error: 'Username and password required' });
-    }
-  if (users.has(username))
-    return res.status(409).json({ error: 'User already exists' });
-  
+
+  if (!username || !password)
+    return res.status(400).json({ error: 'Email and password required' });
+
   try {
+    const [rows] = await pool.execute('SELECT email FROM users WHERE email = ?', [username]);
+    if (rows.length > 0) {
+      return res.status(409).json({ error: 'User already exists' });
+    }
+
     const saltRounds = parseInt(process.env.SALT_ROUNDS) || 10;
-    const hashed = await bcrypt.hash(password, saltRounds);
-    users.set(username, hashed);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    await pool.execute(
+      'INSERT INTO users (email, password_hash) VALUES (?, ?)',
+      [username, hashedPassword]
+    );
+
     res.json({ message: 'User registered successfully' });
   } catch (err) {
-    console.error(err);
+    console.error('Register error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Login endpoint (checks password and issues a JWT token)
+// LOGIN endpoint
 app.post('/api/auth/login', async (req, res) => {
   const { username, password } = req.body;
-  if (!username || !password)
-    return res.status(400).json({ error: 'Username and password required' });
 
-  const storedHash = users.get(username);
-  if (!storedHash)
-    return res.status(401).json({ error: 'Invalid credentials' });
+  if (!username || !password)
+    return res.status(400).json({ error: 'Email and password required' });
 
   try {
-    const valid = await bcrypt.compare(password, storedHash);
-    if (valid) {
-      // Create JWT token
-      const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      return res.json({ message: 'Login successful', token });
-    } else {
+    const [rows] = await pool.execute('SELECT id, password_hash FROM users WHERE email = ?', [username]);
+    if (rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+
+    const valid = await bcrypt.compare(password, rows[0].password_hash);
+    if (!valid) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ email: username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ message: 'Login successful', token });
   } catch (err) {
-    console.error(err);
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Protected route example (requires JWT)
+// Protected route
 app.get('/api/protected', (req, res) => {
-  const token = req.headers['authorization']?.split(' ')[1]; // Bearer token
+  const authHeader = req.headers['authorization'] || '';
+  const token = authHeader.split(' ')[1];
 
   if (!token) return res.status(403).json({ error: 'No token provided' });
 
