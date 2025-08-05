@@ -3,18 +3,27 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import BottomSmoke from './BottomSmoke';
+import { jwtDecode } from 'jwt-decode';
+
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    // Simulating fetching user info (Replace with actual API call)
-    const userInfo = localStorage.getItem('token');
-    if (userInfo) {
-      setUser({
-        username: 'john_doe',
-        role: 'Admin',
-      });
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser({
+          email: decoded.email,
+          role: decoded.role || 'user' // default role if not in token
+        });
+
+        console.log(decoded.role);
+      } catch (err) {
+        console.error('Invalid token:', err);
+        setErrorMsg('Invalid session, please log in again');
+      }
     } else {
       setErrorMsg('User not logged in');
     }
@@ -35,12 +44,12 @@ function Dashboard() {
           {user && (
             <div className="text-center">
               <h2 className="text-3xl font-bold mb-6 text-[#b7c8b5]">
-                Welcome to your Dashboard, <span className="text-[#88a07d]">{user.username}</span>
+                Welcome to your Dashboard, <span className="text-[#88a07d]">{user.email}</span>
               </h2>
               <p className="text-sm text-[#a2c2a2] mb-6">Role: {user.role}</p>
 
               {/* Admin Controls Section */}
-              {user.role === 'Admin' && (
+              {user.role === 'admin' && (
                 <div className="space-y-6">
                   <h3 className="text-xl font-semibold text-[#88a07d]">Admin Controls</h3>
                   <div className="space-y-4">
@@ -53,12 +62,18 @@ function Dashboard() {
                     <Link to="/view-reports" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
                       View Reports
                     </Link>
+                      <Link to="/profile" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
+                      Edit Profile
+                    </Link>
+                    <Link to="/user-settings" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
+                      Account Settings
+                    </Link>
                   </div>
                 </div>
               )}
 
               {/* User Controls Section */}
-              {user.role === 'User' && (
+              {user.role === 'user' && (
                 <div className="space-y-6">
                   <h3 className="text-xl font-semibold text-[#88a07d]">User Controls</h3>
                   <div className="space-y-4">
