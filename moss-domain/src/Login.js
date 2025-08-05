@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import BottomSmoke from './BottomSmoke';
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,28 +11,33 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  setErrorMsg('');
+    e.preventDefault();
+    setErrorMsg('');
 
-  try {
-    const res = await fetch('https://flumpy.ca/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: email, password })
-    });
+    try {
+      const res = await fetch('https://flumpy.ca/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: email.trim(), password })
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok && data.token) {
-      localStorage.setItem('token', data.token); // Save the token to localStorage
-      navigate('/dashboard'); // Redirect to dashboard
-    } else {
-      setErrorMsg(data.error || 'Login failed');
-    }
+      if (res.ok && data.token) {
+        // Save token and role in localStorage
+        localStorage.setItem('token', data.token);
+        if (data.role) {
+          localStorage.setItem('role', data.role);
+        }
+        navigate('/dashboard');
+      } else {
+        setErrorMsg(data.error || 'Login failed');
+      }
     } catch (err) {
-        setErrorMsg('Server error. Please try again later.');
+      console.error('Login error:', err);
+      setErrorMsg('Server error. Please try again later.');
     }
-    };
+  };
 
   return (
     <>
@@ -51,7 +57,9 @@ function Login() {
 
           <form className="space-y-6" onSubmit={handleLogin}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#a2c2a2]">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-[#a2c2a2]">
+                Email
+              </label>
               <input
                 type="email"
                 id="email"
@@ -63,7 +71,9 @@ function Login() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[#a2c2a2]">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-[#a2c2a2]">
+                Password
+              </label>
               <input
                 type="password"
                 id="password"

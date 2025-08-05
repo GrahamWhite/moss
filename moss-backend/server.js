@@ -8,6 +8,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const xss = require('xss');
 const validator = require('validator');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -30,9 +32,8 @@ async function initDB() {
 initDB();
 
 // --- Security Middleware ---
-app.use(helmet()); // Adds common HTTP security headers
+app.use(helmet());
 
-// Rate limiting: max 5 requests per minute per IP for login/register
 const authLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 5,
@@ -47,7 +48,7 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -58,9 +59,8 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(express.json({ limit: '10kb' })); // Limit request body size
+app.use(express.json({ limit: '10kb' }));
 
-// --- Helper: sanitize and validate email/password ---
 function validateCredentials(email, password) {
   if (!email || !password) return false;
   if (!validator.isEmail(email)) return false;
@@ -68,7 +68,16 @@ function validateCredentials(email, password) {
   return true;
 }
 
-// --- REGISTER ---
+// --- Gmail SMTP Transporter ---
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER, // Gmail address
+    pass: process.env.SMTP_PASS  // Gmail App Password
+  }
+});
+
+// --- REGISTER (with email verification) ---
 app.post('/api/register', authLimiter, async (req, res) => {
   let { username, password } = req.body;
 
@@ -88,19 +97,30 @@ app.post('/api/register', authLimiter, async (req, res) => {
     const saltRounds = parseInt(process.env.SALT_ROUNDS) || 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+
     await pool.execute(
-      'INSERT INTO users (email, password_hash) VALUES (?, ?)',
-      [username, hashedPassword]
+      'INSERT INTO users (email, password_hash, verification_token, verified) VALUES (?, ?, ?, 0)',
+      [username, hashedPassword, verificationToken]
     );
 
-    res.json({ message: 'User registered successfully' });
+    const verifyLink = `${process.env.FRONTEND_URL}/verify/${verificationToken}`;
+    await transporter.sendMail({
+      from: `"Moss" <${process.env.SMTP_USER}>`,
+      to: username,
+      subject: 'Verify your email - Moss',
+      html: `<p>Please click the link below to verify your email:</p>
+             <a href="${verifyLink}">${verifyLink}</a>`
+    });
+
+    res.json({ message: 'Registration successful, please check your email to verify your account' });
   } catch (err) {
     console.error('Register error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// --- LOGIN ---
+// --- LOGIN (only if verified = 1) ---
 app.post('/api/auth/login', authLimiter, async (req, res) => {
   let { username, password } = req.body;
 
@@ -113,12 +133,16 @@ app.post('/api/auth/login', authLimiter, async (req, res) => {
 
   try {
     const [rows] = await pool.execute(
-      'SELECT email, password_hash, role FROM users WHERE email = ?',
+      'SELECT email, password_hash, role, verified FROM users WHERE email = ?',
       [username]
     );
 
     if (rows.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    if (rows[0].verified !== 1) {
+      return res.status(403).json({ error: 'Please verify your email before logging in.' });
     }
 
     const valid = await bcrypt.compare(password, rows[0].password_hash);
@@ -137,6 +161,32 @@ app.post('/api/auth/login', authLimiter, async (req, res) => {
     res.json({ message: 'Login successful', token, role: userRole });
   } catch (err) {
     console.error('Login error:', err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// --- VERIFY EMAIL ---
+app.get('/api/verify/:token', async (req, res) => {
+  const token = req.params.token;
+
+  try {
+    const [rows] = await pool.execute(
+      'SELECT email FROM users WHERE verification_token = ?',
+      [token]
+    );
+
+    if (rows.length === 0) {
+      return res.status(400).json({ error: 'Invalid or expired verification token' });
+    }
+
+    await pool.execute(
+      'UPDATE users SET verified = 1, verification_token = NULL WHERE verification_token = ?',
+      [token]
+    );
+
+    res.json({ message: 'Email verified successfully, you can now log in.' });
+  } catch (err) {
+    console.error('Verification error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });

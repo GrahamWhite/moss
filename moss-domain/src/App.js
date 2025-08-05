@@ -18,6 +18,8 @@ import Smoke from './Smoke';
 import BottomSmoke from './BottomSmoke'; // Import BottomSmoke
 import MossCanvas from './MossCanvas';
 
+import VerifyEmail from './VerifyEmail';
+
 function Home() {
   return (
     <>
@@ -65,6 +67,10 @@ function App() {
           <Route path="/manage-users" element={<PrivateRoute element={<UnderConstruction />} />} />
           <Route path="/site-settings" element={<PrivateRoute element={<UnderConstruction />} />} />
           <Route path="/view-reports" element={<PrivateRoute element={<UnderConstruction />} />} />
+          <Route path="/profile" element={<PrivateRoute element={<UnderConstruction />} />} />
+          <Route path="/user-settings" element={<PrivateRoute element={<UnderConstruction />} />} />
+
+          <Route path="/verify/:token" element={<VerifyEmail />} />
         </Routes>
       </div>
     </Router>
