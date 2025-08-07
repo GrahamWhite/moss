@@ -205,7 +205,32 @@ app.get('/api/protected', (req, res) => {
   });
 });
 
+
+// POST /api/meetings
+app.post('/api/meetings', async (req, res) => {
+  const { title, dateTime, info, location, pictureUrl } = req.body;
+
+  if (!title || !dateTime) {
+    return res.status(400).json({ error: 'Title and Date/Time are required' });
+  }
+
+  try {
+    const [result] = await pool.execute(
+      `INSERT INTO meeting (title, start_time, info, location, picture_url) 
+       VALUES (?, ?, ?, ?, ?)`,
+      [title, dateTime, info, location, pictureUrl || null]
+    );
+
+    res.status(201).json({ message: 'Meeting created successfully', meetingId: result.insertId });
+  } catch (err) {
+    console.error('Error inserting meeting:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+
 // --- Start server ---
 app.listen(PORT, () => {
   console.log(`Auth server running on port ${PORT}`);
 });
+
