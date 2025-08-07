@@ -256,6 +256,62 @@ app.get('/api/meetings', async (req, res) => {
 });
 
 
+// POST /api/meetings/:id/join
+app.post('/api/meetings/:id/join', async (req, res) => {
+  try {
+    const meetingId = req.params.id;
+
+    // TODO: Replace this with real authentication
+    // For now, we’ll assume you get the user’s email from the token
+    const authHeader = req.headers['authorization'] || '';
+    const token = authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    const userEmail = decoded.email;
+
+    // Get user_id
+    const [userRows] = await pool.execute(
+      'SELECT user_id FROM user WHERE email = ?',
+      [userEmail]
+    );
+
+    if (userRows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const userId = userRows[0].user_id;
+
+    // Insert into user_meeting if not already joined
+    await pool.execute(
+      'INSERT IGNORE INTO user_meeting (user_id, meeting_id) VALUES (?, ?)',
+      [userId, meetingId]
+    );
+
+    // Get meeting title for confirmation
+    const [meetingRows] = await pool.execute(
+      'SELECT title FROM meeting WHERE meeting_id = ?',
+      [meetingId]
+    );
+
+    if (meetingRows.length === 0) {
+      return res.status(404).json({ error: 'Meeting not found' });
+    }
+
+    res.json({ message: 'Joined meeting successfully', title: meetingRows[0].title });
+  } catch (err) {
+    console.error('Join error:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+
 // --- Start server ---
 app.listen(PORT, () => {
   console.log(`Auth server running on port ${PORT}`);

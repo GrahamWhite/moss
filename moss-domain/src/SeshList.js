@@ -40,20 +40,24 @@ function SeshList() {
   }, []);
 
   const handleJoin = async (id) => {
-    try {
-      const res = await fetch(`/api/meetings/${id}/join`, {
-        method: 'POST'
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert(`You joined the sesh: ${data.title}`);
-      } else {
-        alert(data.error || 'Failed to join sesh');
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`/api/meetings/${id}/join`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
-    } catch (err) {
-      console.error('Join error:', err);
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert(`You joined the sesh: ${data.title}`);
+    } else {
+      alert(data.error || 'Failed to join sesh');
     }
-  };
+  } catch (err) {
+    console.error('Join error:', err);
+  }
+};
 
   return (
     <>
