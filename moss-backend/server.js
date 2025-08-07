@@ -229,6 +229,33 @@ app.post('/api/meetings', async (req, res) => {
 });
 
 
+//Select Meetings
+app.get('/api/meetings', async (req, res) => {
+  try {
+    const [rows] = await pool.execute(`
+      SELECT m.meeting_id, m.title, m.start_time, m.info, m.location, m.picture_url,
+             GROUP_CONCAT(u.email) AS users
+      FROM meeting m
+      LEFT JOIN user_meeting um ON m.meeting_id = um.meeting_id
+      LEFT JOIN user u ON um.user_id = u.user_id
+      GROUP BY m.meeting_id
+      ORDER BY m.start_time ASC
+    `);
+
+    // Convert comma-separated user emails to arrays
+    const meetings = rows.map(row => ({
+      ...row,
+      users: row.users ? row.users.split(',') : []
+    }));
+
+    res.json(meetings);
+  } catch (err) {
+    console.error('Error fetching meetings:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+
 // --- Start server ---
 app.listen(PORT, () => {
   console.log(`Auth server running on port ${PORT}`);

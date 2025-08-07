@@ -62,6 +62,12 @@ function Dashboard() {
                     <Link to="/view-reports" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
                       View Reports
                     </Link>
+                    <Link to="/sesh" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
+                      Create Sesh
+                    </Link>
+                    <Link to="/sesh-list" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
+                      Current Seshes
+                    </Link>
                       <Link to="/profile" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
                       Edit Profile
                     </Link>
@@ -77,6 +83,12 @@ function Dashboard() {
                 <div className="space-y-6">
                   <h3 className="text-xl font-semibold text-[#88a07d]">User Controls</h3>
                   <div className="space-y-4">
+                    <Link to="/sesh" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
+                      Create Sesh
+                    </Link>
+                     <Link to="/sesh-list" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
+                      Current Seshes
+                    </Link>
                     <Link to="/profile" className="block p-4 bg-[#3a3a3a] text-[#e3e4d9] rounded-xl hover:bg-[#88a07d]">
                       Edit Profile
                     </Link>

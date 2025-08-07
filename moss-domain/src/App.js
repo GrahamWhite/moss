@@ -9,16 +9,21 @@ import Login from './Login';
 import Registration from './Registration';
 import Mission from './Mission';
 import Contact from './Contact';
+import Sesh from './Sesh';
+import SeshList from './SeshList';
 
 import Dashboard from './Dashboard'; 
 import PrivateRoute from './PrivateRoute'; 
+import PrivateAdminRoute from './PrivateAdminRoute'; 
+import VerifyEmail from './VerifyEmail';
+
 import UnderConstruction from './UnderConstruction';
 
-import Smoke from './Smoke';
-import BottomSmoke from './BottomSmoke'; // Import BottomSmoke
-import MossCanvas from './MossCanvas';
 
-import VerifyEmail from './VerifyEmail';
+import BottomSmoke from './BottomSmoke'; // Import BottomSmoke
+
+
+
 
 function Home() {
   return (
@@ -64,11 +69,17 @@ function App() {
           <Route path="/updates" element={<UnderConstruction />} />
 
           <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
-          <Route path="/manage-users" element={<PrivateRoute element={<UnderConstruction />} />} />
-          <Route path="/site-settings" element={<PrivateRoute element={<UnderConstruction />} />} />
-          <Route path="/view-reports" element={<PrivateRoute element={<UnderConstruction />} />} />
+
+          {/* Admin routes */}
+          <Route path="/manage-users" element={<PrivateAdminRoute element={<UnderConstruction />} />} />
+          <Route path="/site-settings" element={<PrivateAdminRoute element={<UnderConstruction />} />} />
+          <Route path="/view-reports" element={<PrivateAdminRoute element={<UnderConstruction />} />} />
+          
+          {/* User routes */}
           <Route path="/profile" element={<PrivateRoute element={<UnderConstruction />} />} />
           <Route path="/user-settings" element={<PrivateRoute element={<UnderConstruction />} />} />
+          <Route path="/sesh" element={<PrivateRoute element={<Sesh />} />} />
+          <Route path="/sesh-list" element={<PrivateRoute element={<SeshList />} />} />
 
           <Route path="/verify/:token" element={<VerifyEmail />} />
         </Routes>
