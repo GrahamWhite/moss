@@ -22,6 +22,7 @@ class CurrentSeshesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var emptyText: TextView
+    private lateinit var titleText: TextView
 
     private val seshList = mutableListOf<Sesh>()
     private lateinit var adapter: SeshAdapter
@@ -30,6 +31,7 @@ class CurrentSeshesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_current_seshes)
 
+        titleText = findViewById(R.id.titleText)
         recyclerView = findViewById(R.id.seshRecyclerView)
         progressBar = findViewById(R.id.progressBar)
         emptyText = findViewById(R.id.emptyText)
@@ -37,6 +39,7 @@ class CurrentSeshesActivity : AppCompatActivity() {
         adapter = SeshAdapter(seshList) { sesh ->
             joinSesh(sesh)
         }
+
 
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter

@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundPrimary">
 
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="166dp"
+            android:layout_height="161dp"
+            android:layout_marginTop="24dp"
+            android:maxWidth="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_logo" />
 
         <!-- Welcome text placeholder -->
         <TextView
@@ -22,8 +33,11 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:layout_marginBottom="24dp"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/imageView2"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Admin Controls Section -->
         <TextView
@@ -31,81 +45,104 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Admin Controls"
+            android:textColor="#88a07d"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#88a07d"
             android:visibility="gone"
-            android:layout_marginBottom="12dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_welcome" />
 
         <Button
             android:id="@+id/btn_manage_users"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Manage Users"
-            android:background="@color/buttonPrimary"
+            android:backgroundTint="@color/colorDisabled"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/admin_controls_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_site_settings"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Site Settings"
-            android:background="@color/buttonPrimary"
+            android:backgroundTint="@color/colorDisabled"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_manage_users"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_view_reports"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="View Reports"
-            android:background="@color/buttonPrimary"
+            android:backgroundTint="@color/colorDisabled"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_site_settings"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_create_sesh_admin"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Create Sesh"
-            android:background="@color/buttonPrimary"
+            android:backgroundTint="@color/buttonPrimary"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_view_reports"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_current_seshes_admin"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Current Seshes"
-            android:background="@color/buttonPrimary"
+            android:backgroundTint="@color/buttonPrimary"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_create_sesh_admin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_edit_profile_admin"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Edit Profile"
-            android:background="@color/buttonPrimary"
+            android:backgroundTint="@color/colorDisabled"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_current_seshes_admin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_account_settings_admin"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Account Settings"
-            android:background="@color/buttonPrimary"
+            android:backgroundTint="@color/colorDisabled"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_edit_profile_admin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- User Controls Section -->
         <TextView
@@ -113,61 +150,66 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User Controls"
+            android:textColor="#88a07d"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#88a07d"
             android:visibility="gone"
-            android:layout_marginBottom="12dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_account_settings_admin" />
 
         <Button
             android:id="@+id/btn_create_sesh_user"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Create Sesh"
-            android:background="#3a3a3a"
+            android:backgroundTint="@color/buttonPrimary"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/user_controls_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_current_seshes_user"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Current Seshes"
-            android:background="#3a3a3a"
+            android:backgroundTint="@color/buttonPrimary"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_create_sesh_user"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_edit_profile_user"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Edit Profile"
-            android:background="#3a3a3a"
+            android:backgroundTint="@color/colorDisabled"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_current_seshes_user"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_account_settings_user"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Account Settings"
-            android:background="#3a3a3a"
+            android:backgroundTint="@color/colorDisabled"
             android:textColor="#e3e4d9"
             android:visibility="gone"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_edit_profile_user"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Back Button -->
-        <Button
-            android:id="@+id/btn_back_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="← Back to Home"
-            android:textColor="#8cb3af"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_marginTop="24dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
 </ScrollView>
