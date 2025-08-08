@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroundPrimary"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:id="@+id/imageSesh"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Sesh Image"
+        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_logo" />
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#b7c8b5"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textWhen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#a2c2a2"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/textInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#a2c2a2"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/textLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#88a07d"
+        android:autoLink="web"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/textUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#a2c2a2"
+        android:layout_marginTop="4dp" />
+
+    <Button
+        android:id="@+id/buttonJoin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Join Sesh"
+        android:background="@color/buttonPrimary"
+        android:textColor="#000000"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>
