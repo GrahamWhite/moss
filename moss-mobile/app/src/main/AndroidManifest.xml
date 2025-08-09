@@ -47,6 +47,10 @@
         <activity android:name=".MapPickerActivity"
             android:exported="true"
             />
+
+        <activity android:name=".SeshMapActivity"
+            android:exported="true"
+            />
     </application>
 
 </manifest>

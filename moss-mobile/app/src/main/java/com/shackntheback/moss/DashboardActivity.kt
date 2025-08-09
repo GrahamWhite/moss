@@ -118,7 +118,8 @@ class DashboardActivity : AppCompatActivity() {
             findViewById<Button>(R.id.btn_create_sesh_admin),
             findViewById<Button>(R.id.btn_current_seshes_admin),
             findViewById<Button>(R.id.btn_edit_profile_admin),
-            findViewById<Button>(R.id.btn_account_settings_admin)
+            findViewById<Button>(R.id.btn_account_settings_admin),
+            findViewById<Button>(R.id.btn_sesh_map)
         )
         val adminLabel = findViewById<TextView>(R.id.admin_controls_label)
 
@@ -145,6 +146,10 @@ class DashboardActivity : AppCompatActivity() {
         // Set OnClick listeners for Create Sesh
         setButtonClick(R.id.btn_create_sesh_user, CreateSeshActivity::class.java)
         setButtonClick(R.id.btn_create_sesh_admin, CreateSeshActivity::class.java)
+
+        // Set OnClick listeners for Sesh Map
+        setButtonClick(R.id.btn_sesh_map, SeshMapActivity::class.java)
+
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)

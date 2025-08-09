@@ -208,7 +208,7 @@ app.get('/api/protected', (req, res) => {
 
 // POST /api/meetings
 app.post('/api/meetings', async (req, res) => {
-  const { title, dateTime, info, location, pictureUrl } = req.body;
+  const { title, dateTime, info, location, pictureUrl, latitude, longitude } = req.body;
 
   if (!title || !dateTime) {
     return res.status(400).json({ error: 'Title and Date/Time are required' });
@@ -216,9 +216,17 @@ app.post('/api/meetings', async (req, res) => {
 
   try {
     const [result] = await pool.execute(
-      `INSERT INTO meeting (title, start_time, info, location, picture_url) 
-       VALUES (?, ?, ?, ?, ?)`,
-      [title, dateTime, info, location, pictureUrl || null]
+      `INSERT INTO meeting (title, start_time, info, location, picture_url, latitude, longitude) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        title,
+        dateTime,
+        info === undefined ? null : info,
+        location === undefined ? null : location,
+        pictureUrl === undefined ? null : pictureUrl,
+        latitude,
+        longitude
+      ]
     );
 
     res.status(201).json({ message: 'Meeting created successfully', meetingId: result.insertId });
@@ -229,11 +237,13 @@ app.post('/api/meetings', async (req, res) => {
 });
 
 
+
 //Select Meetings
 app.get('/api/meetings', async (req, res) => {
   try {
     const [rows] = await pool.execute(`
       SELECT m.meeting_id, m.title, m.start_time, m.info, m.location, m.picture_url,
+             m.latitude, m.longitude,
              GROUP_CONCAT(u.email) AS users
       FROM meeting m
       LEFT JOIN user_meeting um ON m.meeting_id = um.meeting_id
